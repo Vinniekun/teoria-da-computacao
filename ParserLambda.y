@@ -18,23 +18,23 @@ import Data.Char
 
 -- regras de producao da gramatica
 
-CalcLamb : lam var '.' CalcLamb             { LamAbs $2 ( $4 ) }
-       | lam var '.' '('CalcLamb')'         { LamAbs $2 ( $5 ) }
-       | '(' lam var '.' CalcLamb')'        { ( LamAbs $3 ( $5 ) ) }
-	   | '(' lam var '.' '('CalcLamb')' ')' { ( LamAbs $3 ( $6 ) ) }
-	   | CalcLamb CalcLamb                  { ( LamApp $1 $2 ) }
-	   | '(' CalcLamb CalcLamb ')'          { ( LamApp $2 $3 ) }
-	   | '(' CalcLamb ')' '(' CalcLamb ')'  { ( LamApp $2 $5 ) }
-	   | var                                { Var $1 }
+TLam : lam var '.' TLam { Abs $2 ( $4 ) }
+       | lam var '.' '('TLam')' { Abs $2 ( $5 ) }
+       | '(' lam var '.' TLam')' { ( Abs $3 ( $5 ) ) }
+	   | '(' lam var '.' '('TLam')' ')' { ( Abs $3 ( $6 ) ) }
+	   | TLam TLam { ( App $1 $2 ) }
+	   | '(' TLam TLam ')' { ( App $2 $3 ) }
+	   | '(' TLam ')' '(' TLam ')' { ( App $2 $5 ) }
+	   | var { Var $1 }
 
 {
 
 parseError :: [Token] -> a
 parseError b = error "Parse Error"
 
-data CalcLamb 
-		= LamAbs Char CalcLamb
-		| LamApp CalcLamb CalcLamb
+data TLam 
+		= Abs Char TLam
+		| App TLam TLam
 		| Var Char
 	deriving Show
 
@@ -58,7 +58,4 @@ lexer ('.':cs) = TokenPoint : lexer cs
 
 areEqual :: String -> String -> Bool
 areEqual a b = a == b
-
-
-
 }

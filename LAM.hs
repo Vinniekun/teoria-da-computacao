@@ -1,23 +1,20 @@
 module LAM where
-	import ParserLambda
-	import Data.list
+import ParserLambda
 
-data TLam = Var Char
-           | Abs Char TLam
-           | App TLam TLam deriving Show
+remove_char :: Char -> [Char] -> [Char]
+remove_char c [] = []
+remove_char c s = 
+	if c == head(s)
+		then tail(s)
+	else head s : remove_char c (tail s)
 
-remove :: Char -> [Char] -> [Char]
-remove  = c [] = []
-remove c s = if c == head(s) then tail(s)
-			else head s: remove c (tail s)
-
-find_rename :: Tlam -> Tlam
+find_rename :: TLam -> TLam
 find_rename (App (Abs x t) (Var y)) =
 	if (x /= y) && (elem y (linked_vars t))
-		then (App (Abs x (rename_link t t (name_new_var t))) (Var y))
+		then (App (Abs x (rename_link y t (name_new_var t))) (Var y))
 	else (App (Abs x t) (Var y))
 
-rename_link :: Char -> TLam -> Char -> Tlam
+rename_link :: Char -> TLam -> Char -> TLam
 rename_link x (Var y) z = if (x == y)
 	then (Var z)
 	else (Var y)
@@ -27,7 +24,7 @@ rename_link x (Abs y t) z = if (x == y)
 rename_link x (App t1 t2) z = (App (rename_link x t1 z) (rename_link x t2 z))
 
 name_new_var :: TLam -> Char
-name_new_var t = head ("abcdefghijklmnopqrstuvwxyz") \\ freeVars(t)
+name_new_var t = head("abcdefghijklmnopqrstuvwxyz" \\ freeVars(t))
 
 linked_vars :: TLam -> [Char]
 linked_vars (Var x) = []
@@ -36,7 +33,7 @@ linked_vars (App t1 t2) = linked_vars(t1) ++ linked_vars(t2)
 
 freeVars :: TLam -> [Char]
 freeVars (Var x)     = [x]
-freeVars (Abs x t)   = remove x (freeVars t)
+freeVars (Abs x t)   = remove_char x (freeVars t)
 freeVars (App t1 t2) = freeVars t1 ++ freeVars t2
 
 --semantica

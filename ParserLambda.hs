@@ -168,7 +168,7 @@ happyReduction_1 ((HappyAbsSyn4  happy_var_4) `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (LamAbs happy_var_2 ( happy_var_4 )
+		 (Abs happy_var_2 ( happy_var_4 )
 	) `HappyStk` happyRest
 
 happyReduce_2 = happyReduce 6 4 happyReduction_2
@@ -180,7 +180,7 @@ happyReduction_2 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (LamAbs happy_var_2 ( happy_var_5 )
+		 (Abs happy_var_2 ( happy_var_5 )
 	) `HappyStk` happyRest
 
 happyReduce_3 = happyReduce 6 4 happyReduction_3
@@ -192,7 +192,7 @@ happyReduction_3 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (( LamAbs happy_var_3 ( happy_var_5 ) )
+		 (( Abs happy_var_3 ( happy_var_5 ) )
 	) `HappyStk` happyRest
 
 happyReduce_4 = happyReduce 8 4 happyReduction_4
@@ -206,14 +206,14 @@ happyReduction_4 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (( LamAbs happy_var_3 ( happy_var_6 ) )
+		 (( Abs happy_var_3 ( happy_var_6 ) )
 	) `HappyStk` happyRest
 
 happyReduce_5 = happySpecReduce_2  4 happyReduction_5
 happyReduction_5 (HappyAbsSyn4  happy_var_2)
 	(HappyAbsSyn4  happy_var_1)
 	 =  HappyAbsSyn4
-		 (( LamApp happy_var_1 happy_var_2 )
+		 (( App happy_var_1 happy_var_2 )
 	)
 happyReduction_5 _ _  = notHappyAtAll 
 
@@ -224,7 +224,7 @@ happyReduction_6 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (( LamApp happy_var_2 happy_var_3 )
+		 (( App happy_var_2 happy_var_3 )
 	) `HappyStk` happyRest
 
 happyReduce_7 = happyReduce 6 4 happyReduction_7
@@ -236,7 +236,7 @@ happyReduction_7 (_ `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (( LamApp happy_var_2 happy_var_5 )
+		 (( App happy_var_2 happy_var_5 )
 	) `HappyStk` happyRest
 
 happyReduce_8 = happySpecReduce_1  4 happyReduction_8
@@ -296,9 +296,9 @@ happySeq = happyDontSeq
 parseError :: [Token] -> a
 parseError b = error "Parse Error"
 
-data CalcLamb 
-		= LamAbs Char CalcLamb
-		| LamApp CalcLamb CalcLamb
+data TLam 
+		= Abs Char TLam
+		| App TLam TLam
 		| Var Char
 	deriving Show
 
@@ -322,8 +322,6 @@ lexer ('.':cs) = TokenPoint : lexer cs
 
 areEqual :: String -> String -> Bool
 areEqual a b = a == b
-
-main = getContents >>= print . parserlamb .lexer
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "<built-in>" #-}
