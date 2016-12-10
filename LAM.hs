@@ -1,5 +1,6 @@
 module LAM where
 import ParserLambda
+import Data.List
 
 remove_char :: Char -> [Char] -> [Char]
 remove_char c [] = []
@@ -18,8 +19,9 @@ rename_link :: Char -> TLam -> Char -> TLam
 rename_link x (Var y) z = if (x == y)
 	then (Var z)
 	else (Var y)
-rename_link x (Abs y t) z = if (x == y)
-	then (Abs z (rename_link x t z))
+rename_link x (Abs y t) z =
+	if (x == y)
+		then (Abs z (rename_link x t z))
 	else (Abs y (rename_link x t z))
 rename_link x (App t1 t2) z = (App (rename_link x t1 z) (rename_link x t2 z))
 
